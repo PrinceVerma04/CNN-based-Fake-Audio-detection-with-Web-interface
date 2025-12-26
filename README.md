@@ -2,6 +2,8 @@
 
 A cutting-edge AI-powered web application designed to detect deepfake, text-to-speech (TTS), and voice-cloned audio using Convolutional Neural Networks (CNN).
 
+Video presentation:- https://drive.google.com/file/d/1CzPxIzy_RJz6FlIFIdJgH5rn-Aq6i6Xd/view?usp=drive_link
+
 ---
 
 ## 📋 Table of Contents

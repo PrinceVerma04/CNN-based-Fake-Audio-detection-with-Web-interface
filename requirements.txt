@@ -1,0 +1,34 @@
+# Core
+numpy
+pandas
+scipy
+tqdm
+
+# Audio processing
+torch
+torchaudio
+soundfile
+librosa
+
+# Deep Learning / Models
+transformers
+speechbrain
+
+# Evaluation
+jiwer
+scikit-learn
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Web / Deployment (Phase 4)
+flask
+fastapi
+uvicorn
+jinja2
+
+# Utilities
+ipython
+notebook

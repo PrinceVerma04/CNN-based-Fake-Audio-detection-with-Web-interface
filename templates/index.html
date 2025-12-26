@@ -1,85 +1,115 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fake Audio Detection</title>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Audio Detection</title>
+
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🎙️ Fake Audio Detector </h1>
 
-    <form action="/predict" enctype="multipart/form-data" method="post">
-      <input type="file" name="file" accept="audio/*" required>
-      <button type="submit">Analyze</button>
-    </form>
-
-    {% if result %}
-    <div class="output">
-      <h3>{{ result.filename }}</h3>
-      <p><strong>Prediction:</strong> {{ result.label }} ({{ result.prob }})</p>
-
-      
-      <div id="waveformPlot" style="width:600px;height:200px;"></div>
-      
-      <div id="melPlot" style="width:600px;height:400px;"></div>
-
-       <!-- Smart explanation -->
-          <div class="summary-box">
-            <h4>💡Smart Explanation</h4>
-            <p>{{ result.explanation }}</p>
-          </div>
-      <script>
-        // ---------- Waveform Plot ----------
-        const waveform = JSON.parse(`{{ result.waveform | tojson | safe }}`);
-        const waveformTrace = {
-          y: waveform,
-          type: 'scatter',
-          mode: 'lines',
-          line: { color: '#FF8C00', width: 1.2 },
-          fill: 'tozeroy'
-        };
-        const waveformLayout = {
-          // title: 'Waveform',
-          paper_bgcolor: '#1e1e1e',
-          plot_bgcolor: '#1e1e1e',
-          font: { color: '#ffffff', family: "'Inter', sans-serif", size:"12" },
-          xaxis: { title: 'Time' },
-          yaxis: { title: 'Amplitude' },
-          margin: { t: 40, l: 50, r: 20, b: 40 }
-        };
-        Plotly.newPlot('waveformPlot', [waveformTrace], waveformLayout);
-
-        // ---------- Mel Spectrogram Plot ----------
-        const melData = JSON.parse(`{{ result.mel_data | tojson | safe }}`);
-        const trace = {
-          z: melData,
-          type: 'heatmap',
-          colorscale: 'Magma',
-          showscale: true
-        };
-        const layout = {
-          // title: '{{ result.label }} ({{ result.prob }})',
-          xaxis: { title: 'Frames' },
-          yaxis: { title: 'Mel Bands' },
-          paper_bgcolor: '#1e1e1e',
-          plot_bgcolor: '#1e1e1e',
-          font: { color: '#ffffff', family: "'Inter', sans-serif", size:"12" },
-          margin: { t: 50, l: 60, r: 40, b: 60 }
-        };
-        Plotly.newPlot('melPlot', [trace], layout);
-      </script>
+    <!-- Logo at Top Center -->
+    <div class="logo-container">
+        <img src="/static/images/audio_banner.png" alt="IIT Hyderabad">
     </div>
-    {% endif %}
-  </div>
 
-  
+    <!-- Main Content Centered -->
+    <div class="main-content">
+        <div class="container">
+
+            <h1>🎙️ Fake Audio Detection System</h1>
+            <p>AI-powered system to detect Deepfake, TTS & Voice Cloned Audio</p>
+
+            <form action="/predict" enctype="multipart/form-data" method="post" class="upload-box">
+                <input type="file" name="file" accept="audio/*" required>
+                <button type="submit">Analyze Audio</button>
+            </form>
+
+            {% if error %}
+                <div class="error-box">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            {% if result %}
+                <div class="result-card">
+
+                    <h3>📄 {{ result.filename }}</h3>
+
+                    <div class="prediction">
+                        <!-- Audio Player -->
+                        <div class="audio-player">
+                            <h4>🎧 Uploaded Audio Preview</h4>
+                            <audio controls>
+                                <source src="data:audio/wav;base64,{{ result.audio_base64 }}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <span class="label {{ result.label | lower }}">
+                            {{ result.label }}
+                        </span>
+                        <span class="probability">
+                            Confidence: {{ result.prob }}
+                        </span>
+                    </div>
+
+                    <!-- Plots -->
+                    <div class="plots">
+                        <div id="waveformPlot"></div>
+                        <div id="melPlot"></div>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="summary-box">
+                        <h4>💡 AI Explanation</h4>
+                        <p>{{ result.explanation }}</p>
+                    </div>
+
+                    <script>
+                        const resultData = {{ result | tojson | safe }};
+
+                        Plotly.newPlot("waveformPlot", [{
+                            y: resultData.waveform,
+                            type: "scatter",
+                            mode: "lines",
+                            line: { color: '#5e72eb', width: 2 }
+                        }], { 
+                            title: { text: "Waveform", font: { color: '#e0e0e0' } },
+                            paper_bgcolor: 'rgba(0,0,0,0)',
+                            plot_bgcolor: 'rgba(30,30,30,0.5)',
+                            font: { color: '#e0e0e0' },
+                            xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                            yaxis: { gridcolor: 'rgba(255,255,255,0.1)' }
+                        });
+
+                        Plotly.newPlot("melPlot", [{
+                            z: resultData.mel_data,
+                            type: "heatmap",
+                            colorscale: "Viridis"
+                        }], { 
+                            title: { text: "Mel Spectrogram", font: { color: '#e0e0e0' } },
+                            paper_bgcolor: 'rgba(0,0,0,0)',
+                            plot_bgcolor: 'rgba(30,30,30,0.5)',
+                            font: { color: '#e0e0e0' }
+                        });
+                    </script>
+
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- Footer at Bottom -->
+    <footer>
+        © 2025 Fake Audio Detection | CNN-based AI System
+    </footer>
+
 </body>
-</html>  
-
- 
-
-
+</html>

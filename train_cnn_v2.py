@@ -103,7 +103,7 @@ class FADCNN(nn.Module):
 def train():
     
     # 3.1. Load the Dataset and apply augmentation using the MelDataSet blueprint
-    df = pd.read_csv("data/fad_mel_dataset.csv")
+    df = pd.read_csv("C:\Users\saish\OneDrive\Desktop\CNN BASED Approach\CNN based aproach\fad_mel_dataset.csv")
     df["path"] = df["path"].str.replace("\\", "/", regex=False)
     df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 
@@ -163,7 +163,7 @@ def train():
         if va_f1 > best_f1:
             best_f1, counter = va_f1, 0
             os.makedirs("models", exist_ok=True)
-            torch.save(model.state_dict(), "models/cnn_v2.pt")
+            torch.save(model.state_dict(), "C:\Users\saish\OneDrive\Desktop\CNN BASED Approach\CNN based aproach\models\cnn_v2.pt")
             print("Saved best => models/cnn_v2.pt")
         else:
             counter += 1

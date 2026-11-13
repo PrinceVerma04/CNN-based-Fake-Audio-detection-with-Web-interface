@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 import torch, torchaudio, numpy as np, os, io, base64, matplotlib.pyplot as plt
 from train_cnn_v2 import FADCNN
 import seaborn as sns
+import tempfile
 sns.set_theme(style="darkgrid")  #  add this line
 from environs import load_dotenv
 from openai import OpenAI
@@ -195,8 +196,12 @@ async def home(request: Request):
 @app.post("/predict", response_class=HTMLResponse)
 async def predict(request: Request, file: UploadFile = File(...)):
     try:
-        tmp_path = f"temp_{file.filename}"
-        with open(tmp_path, "wb") as f:
+        # Save the upload under a server-generated name; keep only a known audio extension
+        suffix = os.path.splitext(os.path.basename(file.filename or ""))[1].lower()
+        if suffix not in {".wav", ".mp3", ".flac", ".ogg", ".m4a"}:
+            suffix = ".wav"
+        fd, tmp_path = tempfile.mkstemp(prefix="upload_", suffix=suffix)
+        with os.fdopen(fd, "wb") as f:
             f.write(await file.read())
 
         # Load & normalize waveform

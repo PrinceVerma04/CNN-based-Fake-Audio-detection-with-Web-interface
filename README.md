@@ -439,3 +439,8 @@ For issues, suggestions, or contributions:
 **Last Updated**: December 26, 2025
 **Version**: 1.0.0
 **Status**: Active Development
+
+
+## Credits
+
+The original version of this project was written by **Pratyush Karna** ([@pk9444](https://github.com/pk9444)). That includes the CNN training and evaluation scripts, the unit tests, the voice-cloning and detection notebooks, and the first web app. This repository holds my updated version of that project.

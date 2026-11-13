@@ -17,7 +17,7 @@ openai_key = os.getenv("OPENAI_API_KEY")
 if not openai_key:
     raise RuntimeError(
         "OPENAI_API_KEY not found. Create a .env file next to app.py with:\n"
-        "OPENAI_API_KEY=REMOVED_API_KEY"
+        "OPENAI_API_KEY=your-key-here"
     )
 
 client = OpenAI(api_key=openai_key)
@@ -127,9 +127,9 @@ Features (JSON):
 # Model loading
 # -----------------------------
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model_path = "C:\Users\saish\OneDrive\Desktop\CNN BASED Approach\CNN based aproach\models\cnn_v2.pt"
+model_path = "models/cnn_v2.pt"
 model = FADCNN().to(device)
-model.load_state_dict(torch.load(model_path, map_location=device))
+model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True))
 model.eval()
 print(f" Model loaded from {model_path}")
 

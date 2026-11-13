@@ -61,7 +61,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model_path = Path("models/cnn_v2.pt")
 
 model = FADCNN().to(device)
-model.load_state_dict(torch.load(model_path, map_location=device))
+model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True))
 model.eval()
 
 print("✅ CNN model loaded")

@@ -29,7 +29,7 @@ loaders = {
 # -----------------------------
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = FADCNN().to(device)
-model.load_state_dict(torch.load("models/cnn_v2.pt", map_location=device))
+model.load_state_dict(torch.load("models/cnn_v2.pt", map_location=device, weights_only=True))
 model.eval()
 
 # -----------------------------

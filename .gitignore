@@ -58,3 +58,5 @@ logs/
 # Temp files
 *.tmp
 .cache/
+# Local test recordings
+temp_download*.wav

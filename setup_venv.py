@@ -145,54 +145,6 @@ async def home(request: Request):
 
 
 #==============================BASELINE WORKING FUNCTION====================================#
-# @app.post("/predict", response_class=HTMLResponse)
-# async def predict(request: Request, file: UploadFile = File(...)):
-#     try:
-#         # 1️⃣ Save uploaded file temporarily
-#         tmp_path = f"temp_{file.filename}"
-#         with open(tmp_path, "wb") as f:
-#             f.write(await file.read())
-
-#         # 2️⃣ Load waveform
-#         wav, sr = torchaudio.load(tmp_path)
-#         wav = wav.mean(dim=0)  # mono
-#         wav = wav / (wav.abs().max() + 1e-9)
-#         waveform = wav.cpu().numpy().tolist()
-
-#         # 3️⃣ Preprocess to mel spectrogram
-#         mel = preprocess_audio(tmp_path)
-#         mel_tensor = torch.tensor(mel).unsqueeze(0).unsqueeze(0).float().to(device)
-
-#         # 4️⃣ Model inference
-#         with torch.no_grad():
-#             logits = model(mel_tensor)
-#             prob = torch.sigmoid(logits).item()
-#         label = "FAKE" if prob >= 0.5 else "REAL"
-
-#         # 5️⃣ Clean up temp file
-#         os.remove(tmp_path)
-
-#         # 6️⃣ Render HTML with both waveform & mel spectrogram
-#         return templates.TemplateResponse(
-#             "index.html",
-#             {
-#                 "request": request,
-#                 "result": {
-#                     "filename": file.filename,
-#                     "label": label,
-#                     "prob": round(prob, 3),
-#                     "mel_data": mel.tolist(),
-#                     "waveform": waveform,
-#                 },
-#             },
-#         )
-
-#     except Exception as e:
-#         return templates.TemplateResponse(
-#             "index.html",
-#             {"request": request, "error": str(e), "result": None},
-#         )
-
 @app.post("/predict", response_class=HTMLResponse)
 async def predict(request: Request, file: UploadFile = File(...)):
     try:
